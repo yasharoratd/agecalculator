@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        #progress-bar {
+            width: 0;
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 4px;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Age Calculator</h1>
+    <p>Calculate your age and find out when your next birthday is!</p>
+    <input type="text" id="username" placeholder="Enter your name">
+    <input type="date" id="today" placeholder="Today's Date">
+    <input type="date" id="birthdate" placeholder="Your Birth Date">
+    <button onclick="calculateAge()">Show Results</button>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculateAge() {
+        const progressBar = document.getElementById('progress-bar');
+        progressBar.style.width = '0%';
+        setTimeout(() => progressBar.style.width = '25%', 100);
+        
+        const username = document.getElementById('username').value;
+        const today = new Date(document.getElementById('today').value);
+        const birthdate = new Date(document.getElementById('birthdate').value);
+        
+        if (!username || !today || !birthdate) {
+            alert("Please fill out all fields.");
+            return;
+        }
+        
+        setTimeout(() => progressBar.style.width = '50%', 200);
+        
+        const age = today.getFullYear() - birthdate.getFullYear();
+        const month = today.getMonth() - birthdate.getMonth();
+        const day = today.getDate() - birthdate.getDate();
+        
+        if (month < 0 || (month === 0 && day < 0)) {
+            age--;
+        }
+        
+        let nextBirthday = new Date(birthdate);
+        nextBirthday.setFullYear(today.getFullYear());
+        if (today > nextBirthday) {
+            nextBirthday.setFullYear(today.getFullYear() + 1);
+        }
+        
+        setTimeout(() => progressBar.style.width = '75%', 300);
+        
+        const result = `${username}, congratulations! Your age is ${age} and your next birthday is on ${nextBirthday.toDateString()}.`;
+        
+        setTimeout(() => {
+            progressBar.style.width = '100%';
+            document.getElementById('result').innerText = result;
+        }, 400);
+    }
+</script>
+
+</body>
+</html>
