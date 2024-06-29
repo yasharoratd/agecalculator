@@ -80,8 +80,8 @@
     <h1>Age Calculator</h1>
     <p>Calculate your age and find out when your next birthday is!</p>
     <input type="text" id="username" placeholder="Enter your name">
-    <input type="date" id="today" placeholder="Today's Date">
-    <input type="date" id="birthdate" placeholder="Your Birth Date">
+    <input type="text" id="today" placeholder="Today's Date" readonly>
+    <input type="text" id="birthdate" placeholder="Enter your birth date (DD/MM/YYYY)">
     <button onclick="calculateAge()">Show Results</button>
     <div class="progress-container">
         <div id="progress-bar"></div>
@@ -89,7 +89,14 @@
     <div class="result" id="result"></div>
 </div>
 <footer>Build by yasharoratd</footer>
+
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const todayInput = document.getElementById('today');
+        const today = new Date().toISOString().split('T')[0];
+        todayInput.value = today;
+    });
+
     function calculateAge() {
         const progressBar = document.getElementById('progress-bar');
         progressBar.style.width = '0%';
@@ -97,24 +104,32 @@
         
         const username = document.getElementById('username').value;
         const today = new Date(document.getElementById('today').value);
-        const birthdate = new Date(document.getElementById('birthdate').value);
+        const birthdate = document.getElementById('birthdate').value;
         
-        if (!username || !today || !birthdate) {
+        if (!username || !birthdate) {
             alert("Please fill out all fields.");
             return;
         }
+
+        const birthDateParts = birthdate.split('/');
+        if (birthDateParts.length !== 3) {
+            alert("Please enter the birth date in the format DD/MM/YYYY.");
+            return;
+        }
+
+        const birthDateFormatted = new Date(`${birthDateParts[2]}-${birthDateParts[1]}-${birthDateParts[0]}`);
         
         setTimeout(() => progressBar.style.width = '50%', 200);
         
-        const age = today.getFullYear() - birthdate.getFullYear();
-        const month = today.getMonth() - birthdate.getMonth();
-        const day = today.getDate() - birthdate.getDate();
+        let age = today.getFullYear() - birthDateFormatted.getFullYear();
+        const month = today.getMonth() - birthDateFormatted.getMonth();
+        const day = today.getDate() - birthDateFormatted.getDate();
         
         if (month < 0 || (month === 0 && day < 0)) {
             age--;
         }
         
-        let nextBirthday = new Date(birthdate);
+        let nextBirthday = new Date(birthDateFormatted);
         nextBirthday.setFullYear(today.getFullYear());
         if (today > nextBirthday) {
             nextBirthday.setFullYear(today.getFullYear() + 1);
